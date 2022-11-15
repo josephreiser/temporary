@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment         # We are testing the Job resource type
+metadata:
+  name: couchdb-deployment  # A name must be given to the Job type in the metadata section
+spec:                     # This is the specification where we can even put the number of replicas
+  replicas: 1
+  selector:
+      matchLabels:
+        app: couchdb-deployment        # some label to give to this pod (see the matching label above)
+  minReadySeconds: 30
+
+  template:                 # actual specification
+      metadata:
+        labels:
+          app: couchdb-deployment
+      spec:
+        containers:
+        - name: couchdb-deployment       # this is going to be used for DNS name
+        # Change the IP address to where you are running this
+          image: couchdb  # this is the image in registry accessible
+          imagePullPolicy: Always  # This forces the node to pull the image
+          command: ["/bin/bash"]
+          env:
+          - name: COUCHDB_USER
+            value: admin
+          - name: COUCHDB_PASSWORD
+            value: group11
+
+          ports:
+          - containerPort: 5984
